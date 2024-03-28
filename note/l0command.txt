@@ -1,0 +1,130 @@
+=>Command
+
+php artisan
+
+=>server run
+php artisan serve
+
+=>Check route list
+php artiisan route:list  // a to z ASC
+php artisan route:list -r //  z to z DESC (-r mean reverse)
+
+=>Check route list by path
+php artisan route:list --path=staff
+php artisan route:list --path=staff -r
+php artisan route:list --path=student
+
+=>Check route list by method
+php artisan route:list --method=get
+php artisan route:list --method=get -r
+php artisan route:list --method=post
+
+=>create new controller
+php artisan make:controller employeesController
+
+=>table to update db to serve
+php artisan migrate
+
+
+=>Create New Table
+php artisan make:migration create_students_table
+php artisan make:migration create_workers_table --create="workers"
+
+=>List all files from database > migration files
+php artisan migrate:status
+
+=>Undo migration
+php artisan migrate:rollback
+
+=>Undo migration by step (selected table count to local)
+php artisan migrate:rollback --step=2
+
+=>Check before rollback table list 
+php artisan migrate:rollback --pretend
+
+=>Delete all table
+php artisan migrate:reset
+
+=>Delete all data (auto rollback and auto migrate back )
+php artisan migrate:refresh
+
+=>Delete all data (auto rollback and auto migrate back /selected table count ot local DESC )
+php artisan migrate:refresh --step=2
+
+=>Add New Columns
+php artisan make:migration add_city_to_shoppers_table --table=shoppers
+
+=> Drop Column 
+php  artisan make:migration remove_id_to_students_table --table=students 
+
+(   !! if u rollback "remove_id_to_students_table" and migrate back that migration u have
+    big problem !! )
+
+=> Rename Columns
+php artisan make:migration rename_students_column --table=students
+
+=>Rename Table
+php artisan make:migration rename_employees_to_customers_table --table=employees
+up=>
+Schema::rename("employees","customers");
+down=>
+Schema::rename("customers","employees");
+
+------------------
+11.16 July
+=>CRUD
+DB::select()
+DB::insert()
+DB::update()
+DB::delete()
+
+DB::table()->get()
+
+=>select(columns)
+=>selectRaw(expression)
+=>get()
+
+$result = DB::table()->select()->get();
+$result = DB::table()->selectRaw()->get();
+
+$result = DB::table("students")->select(DB::raw("*"))->get();
+$result = DB::table("students")->selectRaw(DB::raw("*"))->get();
+
+=>where()
+$result = DB::table("students")->select("fullname","city")->where("city","yangon")->get();
+$result = DB::table("students")->select("fullname","city")->where("city","!=","yangon")->get();
+
+$result = DB::table("students")->select(DB::raw("fullname,city"))->get();
+$result = DB::table("students")->select(DB::raw("fullname,city"))->where("id",3)->get();
+
+$result = DB::table('students')->selectRaw("fullname,city")->get();
+
+// => groupBy(column)
+$result = DB::table("students")->select(DB::raw("COUNT(*) as totalstudents,city"))->groupBy("city")->get();
+
+// => first()
+$result = DB::table("students")->first();
+
+//=> pluck(value,key)
+$result = DB::table("students")->pluck("fullname","id");
+
+------------------
+=>Model
+=Command Lin ( Just Model )
+php artisan make:model Post
+
+Command Lin ( Model + Migration )
+php artisan make:model Article --migration
+or
+php artisan make:model Article -m
+
+------------------
+=>Change Laravel Timezone
+app > 'timezone' => 'Asia/Yangon'
+
+Note:: php artisan config:clear
+
+------------------
+=>Check Route
+php artisan route:clear
+php artisan route:cache

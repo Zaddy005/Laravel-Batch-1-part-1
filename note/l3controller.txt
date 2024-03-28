@@ -1,0 +1,50 @@
+=>Controller 
+                          //controller naming
+php artisan make:controller studentsController 
+
+                                            file path                    method ( as know as  function name)
+                                                |                          |
+Route::get('/students',[\App\Http\Controllers\studentsController::class,"index"])->name('students.index');
+Route::get('/students/show',[\App\Http\Controllers\studentsController::class,"show"])->name('students.show');
+Route::get('/students/edit',[\App\Http\Controllers\studentsController::class,"edit"])->name('students.edit');
+
+------------------------------------------------------------------------------------------------------------------------
+=>Route group
+                2 para meter        sec parameter call back function
+                                        |
+Route::group(['prefix'=>'students'],function(){
+    Route::get('/',[\App\Http\Controllers\studentsController::class,"index"])->name('students.index');
+    Route::get('/show',[\App\Http\Controllers\studentsController::class,"show"])->name('students.show');
+    Route::get('/edit',[\App\Http\Controllers\studentsController::class,"edit"])->name('students.edit');
+});
+
+------------------------------------------------------------------------------------------------------------------------
+=> Name Group
+
+Route::name('students.')->group(function(){
+    Route::get('/students',[\App\Http\Controllers\studentsController::class,"index"])->name('index');
+    Route::get('/students/show',[\App\Http\Controllers\studentsController::class,"show"])->name('show');
+    Route::get('/students/edit',[\App\Http\Controllers\studentsController::class,"edit"])->name('edit');
+});
+
+(!!! we can't use route group and name group at the same time )
+------------------------------------------------------------------------------------------------------------------------
+We need to declare that
+        use App\Http\Controllers\studentsController;
+before don't use studentsController;
+
+Route::name('students.')->group(function(){
+    Route::get('/students',[studentsController::class,"index"])->name('index');
+    Route::get('/students/show',[studentsController::class,"show"])->name('show');
+    Route::get('/students/edit',[studentsController::class,"edit"])->name('edit');
+});
+------------------------------------------------------------------------------------------------------------------------
+=> Resource Controller
+
+php artisan make:controller countriesController  --resource
+( or )
+php artisan make:controller countriesController -r
+
+
+------------------------------------------------------------------------------------------------------------------------
+php artisan make:controller staffsController

@@ -1,0 +1,92 @@
+=> Form CRUD
+= Migration
+
+php artisan make:model Country -m
+
+            $table->id();
+            $table->string("name");
+            $table->string("capital");
+            $table->string("currency");
+            $table->string("content");
+            $table->integer("user_id")->unsigned();
+            $table->timestamps();
+
+php artisan migrate:status
+php artisan migrate
+
+
+=In Model ( Country.php )
+
+    protected $table = "countries";
+    protected $primaryKey = "id";
+    protected $fillable = [
+        "name",
+        "capital",
+        "currency",
+        "content",
+        "user_id"
+    ];
+
+=In Model ( User.php )
+
+    public function countries(){
+        return $this->hasMany(Country::class);
+    }
+
+
+=In CMD
+
+php artisan make:controller countriesController  --resource
+( or )
+php artisan make:controller countriesController -r
+
+
+=In Web
+
+Route::resource('countries',countriesController::class);
+
+
+=In Controller ( countriesController )
+
+public function index()
+    {
+        $countries = Country::all();
+        return view("countries/index",compact( "countries"));
+    }
+
+public function create()
+    {
+        return view("countries/create");
+    }
+
+
+public function store(Request $request)
+    {
+//        return $request->all();
+//        Country::create([
+//            'name'=>$request['name'],
+//            'capital'=>$request['capital'],
+//            'currency'=>$request['currency'],
+//            'content'=>$request['content'],
+//            'user_id'=>$request['user_id']
+//        ]);
+//        return redirect(route("countries.index"));
+
+
+//        $country = new Country;
+//        $country->name = $request['name'];
+//        $country->capital = $request['capital'];
+//        $country->currency = $request['currency'];
+//        $country->content = $request['content'];
+//        $country->user_id = $request['user_id'];
+//        $country->save();
+//
+//        return redirect(route("countries.index"));
+
+        Country::create($request->all());
+        return redirect(route("countries.index"));
+    }
+
+
+check resource/view/create.blade.php    Insert User data form
+                   /index.blade.php     User List

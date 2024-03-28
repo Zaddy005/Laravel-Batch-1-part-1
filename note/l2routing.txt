@@ -1,0 +1,81 @@
+  =>Route
+routes > web.php (or) routes > api.php
+
+=>Available Router Methods  ( 6 )
+Route::get(uri,callback);
+Route::post(uri,callback);
+Route::put(uri,callback);
+Route::patch(uri,callback);
+Route::delete(uri,callback);
+Route::options(uri,callback); 
+
+=> Basic Routing 
+
+Route::get("/",function(){
+    return view("filename);
+});
+
+Route::get("/",function(){
+    return "Save Myanmar";
+});
+
+Route::get("/sayar",function(){
+    return "Hay sayar Nay Kaung Lar ??";
+});
+
+Route::get('sayhi', function(){
+    return "Hi Min Ga Lar Par";
+});
+
+Route::get('about', function(){
+    return "Hi Min Ga Lar Par";
+});
+
+Route::view("about","filename"); 
+Route::view("about","aboutme"); 
+
+
+--------------------------------------------
+
+ Route::get("/about/company",function(){
+    return view("aboutcompany");
+ });
+
+ =>Redirect Routing 
+
+  Route::get('contact',function(){
+    return redirect('to');
+ });
+
+ Route::get('contact',function(){
+    return redirect('about');   //about = route name
+ });
+
+=Syntax 
+Route::redirect("contact","routename");
+Route::redirect("contact","about/company");
+ ---------------------------------------------
+
+=>Route width Parameter 
+=Single Parameter 
+                          parameter
+Route::get('about/company/{staff}',function($staff){
+    return view('aboutcompanystaff',['sf'=>$staff]);
+});
+
+=Multi Parameter 
+
+Route::get('about/company/{staff}/{city}',function($staff,$city){
+    return view('aboutcompanystaffbycity',['sf'=>$staff,'ct'=>$city]);
+});
+
+------------------------------------------------- 
+=>Naming Route 
+Route::get('profile',function(){
+    return view('profileme');
+})->name('profiles');
+
+-------------------------------------------------
+
+
+

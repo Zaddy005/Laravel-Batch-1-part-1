@@ -1,0 +1,28 @@
+=>Custom Config
+
+APP_NAME="First Project"
+
+
+=>Local (Dev)
+APP_DEBUG=true
+
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+
+=>Server (Operation )
+APP_DEBUG=false
+
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+

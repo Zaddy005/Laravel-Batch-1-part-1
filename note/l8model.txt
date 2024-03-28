@@ -1,0 +1,241 @@
+12.22 July
+=>Model
+=>Database Eloquent ORM ( Object-Relational Mapper )
+
+=>Generate Model Class ( Model Typically live in the app\Models dirctory and extends )
+Illuminate\Database\Eloquent\Model
+
+=Command Line ( Just Model )
+php artisan make:model Post
+
+=Command Line ( Model + migration )
+php artisan make:model Article --migration
+or
+php artisan make:model Article -m
+
+-----------------
+
+=>Inspecting Model to Database Table
+php artisan model:show Article
+
+-----------------
+
+=>Useful keywords in Model
+
+=Table name
+protected $table = "articles";
+
+=>Customize timestamp()
+const CREATED_AT = 'created_date';
+const UPDATED_AT = 'updated_date';
+
+=Primary keys
+protected $primaryKey = "id";
+
+php artisan migrate:status
+php artisan migrate
+
+php artisan model:show Article
+
+--------------------------------------
+
+=> Retrieving Datas By Model (single / multi) 55:42
+=> all()
+    $articles = Article::all();
+    return $articles;
+
+    $articles = Article::all();
+    return $articles;
+
+=> find()
+    $articles = Article::find(12);
+    return $articles;
+
+=> first()
+    $articles = Article::first();
+    return $articles;
+
+=> findOrFail()
+    $articles = Article::findOrFail(14);
+    return $articles;
+
+=> where()  // where need to use with get();
+    $articles = Article::where("id","<>","4")->get();
+    return $articles;
+
+=> orderBy()
+use with where()
+orderBy(column,asc or desc); // default is asc
+    $articles = Article::where("id",">","5")->orderBy("id")get();
+    return $articles;
+
+=> take() && limit()
+use with where()
+    $articles = Article::where("id",">","5")->orderBy("id")->take(3)->get();
+    return $articles;
+
+    $articles = Article::where("id",">","5")->orderBy("id")->limit(3)->get();
+    return $articles;
+
+
+// 13.23 July
+=>orderByDesc(column)
+use with where
+    $articles = Article::where("id","<>","2")->orderByDesc("id")->limit(3)->get();
+    return  $articles;
+
+=>firstWhere()
+    $articles = Article::firstWhere("user_id","7");
+    return $articles;
+
+=>firstOrFail();
+use with where()
+    $articles = Article::where("user_id","5")->firstOrFail();
+    return $articles;
+
+=>findOr(id,callback);
+          |
+   pretected $primaryKey = "id"; ( PrimaryKey must be id )
+use for custom error
+
+    $articles = Article::findOr("14",function(){
+        return "ID not found CE ";
+    });
+
+    return $articles;
+
+=>firstOr(callback)
+use with where()
+    $articles = Article::where("user_id","8")->firstOr(function(){
+        return "USEr id not found";
+    });
+
+    return $articles;
+
+----------------------------------
+// 22:00
+=> Retreving Aggregates
+=In web ( Web.php )
+
+=> collect()
+collect can convert array to object
+
+    return collect($data); // obj
+
+=> max(callback)
+max method can't use with array ( must be object )
+
+    return collect($data)->max(); // {"price":400}
+
+if u want only number u can write callback function like down there
+
+    return collect($data)->max(function($num){
+        return $num["price"];
+    }); // 400
+
+=> min(callback)
+min is same like max()
+
+    collect($data)->min();
+
+=> average(callback)
+average must be contain callback cuz
+it can't compare obj key ( cuz key was string )
+
+    return collect($data)->average(function($num){
+        return $num['price'];
+    });
+
+=> avg(callback)
+same like average()
+
+    return collect($data)->avg(function($num){
+        return $num['price'];
+    });
+
+=> sum(callback)
+sum also can't compare with obj key
+
+    return collect($data)->sum(function($num){
+            return $num["price"];
+        });
+
+// 36:00
+----------------------------------
+Retrieving Or creating Data to Model
+
+    => Mass Assignment
+        => Method 1
+            protected $fillable = [
+                "title",
+                "description",
+                "user_id",
+                "rating"
+            ];
+
+    => Method 2
+        protected guarded = [];
+
+    ----------------------------------
+
+=>firstOrCreate([para1],[para2 ]);
+    they compare only para1 // ignore the para 2
+firstOrCreate(  must be associative array   );
+
+
+    Route::get("articles/create",function(){
+        $articles = Article::firstOrCreate([
+            "title"=>"this is new article 26",
+            "user_id"=>2,
+
+        ],[
+            "description"=>"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+            "rating"=>5
+        ]);
+        return $articles;
+    });
+
+=>filter(callback)
+    $articles = Article::get()->filter(function($article){
+        return $article->id <> 10;
+    });
+
+=>reject(callback)
+    return collect($data)->reject();
+
+
+
+
+----------------------------------
+=> all()    |
+=>get()     |---> these 3 method are same
+=>cursor()  |
+
+=> find()
+=> findOrFail()
+=>findOr(id,callback);
+
+=>first();
+=>firstWhere()
+=>firstOrFail();  // use with where()
+=>firstOr(callback)   // use with where()
+
+=> where()  // where need to use with get();
+=> orderBy() // use with where()
+=>orderByDesc(column) // use with where()
+
+=> take() // use with where()
+=>limit() //  use with where()
+
+
+=> collect()
+=> max(callback)
+=> min(callback)
+=> average(callback)
+=> avg(callback)
+=> sum(callback)
+
+=>firstOrCreate([para1],[para2 ]);
+=>filter(callback)
+
+----------------------------------

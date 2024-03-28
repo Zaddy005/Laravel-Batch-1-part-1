@@ -1,0 +1,529 @@
+22.9 Sep
+=>Eloquent One to One Relationship
+=> Migration
+
+php artisan make:mdoel Phone -m
+$table->string("number");
+$table->integer("user_id")->unsigned();
+
+php artisan migrate:status
+php artisan migrate
+
+=> In Modle ( Phone.php )
+
+    protected $table = "phones";
+    protected $primaryKey = "id";
+
+    protected $fillable = [
+        "number",
+        "user_id"
+    ];
+
+=> In Model ( User.php )
+
+    public function phone(){
+        return $this->hasOne(Phone::class);
+    }
+    
+=> In Web
+=> Create
+
+//    Method 1
+//    $phone = new Phone;
+//    $phone->number = "09444444";
+//    $phone->user_id = $user->id;
+//    $phone->save();
+//    return "Data Insert";
+
+//     Method 2
+//    $phone = Phone::create([
+//        "number"=>"09555555",
+//        "user_id"=>$user->id
+//    ]);
+//    return "Data Insert";
+
+//    Method 3
+//    $phone = new Phone([
+//        "number"=>"09666666",
+//        "user_id"=>$user->id
+//    ]);
+//    $user->phone()->save($phone);
+//    return "Data Insert";
+
+//    Method 4   ( No need user id )
+//    $phone = new Phone([
+//        "number"=>"097777777"
+//    ]);
+//    $user->phone()->save($phone);
+//    return "Data Insert";
+
+//    Method 5
+//    $user->phone()->save(new Phone([
+//        "number"=>"09111111",
+//        "user_id"=>$user->id
+//    ]));
+//    return "Data Insert";
+
+
+//    Method 6 ( No Need User id )
+//    $user->phone()->save(new Phone([
+//        "number"=>"09888888"
+//    ]));
+//    return "Data Insert";
+
+
+Update
+In web ( 36:00 )
+Phone::whereUserId( id );
+it will find user_id in table that's connected with Phone Model;
+
+eg
+
+Route::get("user/{id}/phone/update",function($id){
+
+    $phone = Phone::whereUserId($id)->first();  // single-update
+    $phone->number = "09-111-111";
+    $phone->save();
+    return "Updated";
+
+});
+
+
+// read
+Route::get("user/{id}/phone/read",function($id){
+    $user = User::findOrFail($id);
+    $user = $user->phone->number;
+    return "Data Reading = $user ";
+});
+
+
+//delete
+Route::get("user/{id}/phone/delete",function($id){
+//    $user = User::findOrFail($id);  // single delete
+//    $user = $user->phone->delete();
+//    return $user;
+
+    $user = User::FindOrFail($id);  // bulk delete
+    $user = $user->phone()->delete();
+    return $user;
+
+});
+
+bulk delete ( If u put Parentheses in method )
+$user->phone()->delete()
+
+
+=> Eloquent Relationship One to Many  Relationship / hasMany(class)    50:00
+In Model
+User.php
+
+public function articles(){
+    return $this->hasMany(Article::class);
+}
+
+Article.php ( Reverse Thinking )
+
+public function user(){
+    return $this->belongsTo(Article::class);
+}
+
+In web 
+    whereUserId(id)
+    
+Update 
+
+Route::get("user/{id}/article/update",function($id){
+    $article = Article::whereUserId($id)->first();
+    $article->title = "this is new article 35";
+    $article->description = "Update Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
+    $article->rating = 1;
+    $article->save();
+
+    $user = User::findOrFail($id);      // bulk
+    $user->articles()->where("rating","=","5")->update([
+        "title"=>"this is new article 1000",
+        "description"=>"Update Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "rating"=>5
+    ]);
+
+    return "Data Updated";
+});
+
+
+Read
+
+Route::get("user/{id}/article/read",function($id){
+    $user = User::findOrFail($id);
+    foreach($user->articles as $article){
+        echo $article->id."<br/>";
+        echo $article->title."<br/>";
+    }
+});
+
+Delete
+whereId(id);
+
+Route::get("user/{id}/article/delete",function($id){
+    $user = User::findOrFail($id);
+
+    // Note:: Error Cuz,this is one to many Relation Ship
+    // $user->articles->delete();
+
+
+    //? Single Delete
+    // $user->articles()->whereId(20)->delete();
+
+    //? Bulk Delete
+    $user->articles()->delete();
+
+    return "deleted";
+});
+
+
+---------------------------------------------------------
+=> Eloquent Many to Many Relationship / belongsToMany();
+
+=In Model (User.php)
+protected $table = "roles";
+protected $primaryKey = "id";
+protected $fillable = [
+    "name"
+]
+
+doen't obey Laravel Naming Conversion
+
+    public function roles(){
+        return $this->belongsToMany(Role::class,"userroles","user_id","role_id");
+    }
+
+
+
+
+// Eloquent Relationship one to Many ( hasMany() )
+// Create
+Route::get("user/{id}/article/create",function($id){
+    $user = User::findOrFail($id);
+//    Method 1
+//    $article = new Article();
+//    $article->title = "this is new article 29";
+//    $article->description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
+//    $article->user_id = $user->id;
+//    $article->rating = 3;
+//    $article->save();
+
+//    Method 2
+//    $article = Article::create([
+//        "title"=>"this is new article 30",
+//        "description"=>"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+//        "user_id"=>$user->id,
+//        "rating"=>4
+//    ]);
+
+//    Method 3
+//    $article = new Article();
+//    $article->title = "this is new article 31";
+//    $article->description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
+//    $article->user_id = $user->id;
+//    $article->rating = 2;
+//    $user->phone()->save($article);
+
+//    Method 4
+//    $article = new Article([
+//        "title"=>"this is new article 32",
+//        "description"=>"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+//        "rating"=>3
+//    ]);
+//    $user->phone()->save($article);
+
+//    Method 5
+//    $user->phone()->save(new Article([
+//        "title"=>"this is new article 33",
+//        "description"=>"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+//        "user_id"=>$user->id,
+//        "rating"=>4
+//    ]));
+
+
+//    Method 6
+//    $user->phone()->save(new Article([
+//        "title"=>"this is new article 34",
+//        "description"=>"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+//        "rating"=>2
+//    ]));
+//
+//    return "save";
+});
+
+// Update
+Route::get("user/{id}/article/update",function($id){
+//    single Update
+//    $article = Article::whereUserId($id)->first();
+//    $article->title = "this is new article 1000";
+//    $article->save();
+//    return "hello";
+
+//    bulk Update
+//    $articles = Article::whereUserId($id)->get();
+//    foreach($articles as $article){
+//        $article->title = "this is new article 11000";
+//        $article->save();
+//    }
+//    return "hello";
+
+//    Other Method
+//    $user = User::findOrFail($id);
+//    return $user->articles()->where("rating","=",3)->update([
+//        "title"=>"this is update article 100"
+//    ]);
+});
+
+// Read
+Route::get("user/{id}/article/read",function($id){
+//    $user = User::findOrFail($id);
+//    foreach($user->articles as $article){
+//        echo $article."<br/>";
+//    }
+
+//    $articles = Article::whereUserId($id)->get();
+//    foreach ($articles as $article){
+//        echo $article."<br/>";
+//    }
+});
+
+// Delete
+Route::get("user/{id}/article/delete",function($id){
+    $user = User::findOrFail($id);
+//    single delete
+//    return $user->articles()->whereId(6)->get();
+
+//    bulk delete
+//    return $user->articles()->delete();
+});
+
+
+// Eloquent Many to Many Relationship ( belongsToMany() )
+// create
+Route::get("user/{id}/role/create",function($id){
+    $user = User::findOrFail($id);
+    $user->roles()->save(new Role([
+        "name"=>"co-worker"
+    ]));
+    return "Hello";
+});
+
+// update
+Route::get("user/{id}/role/update",function($id){
+    $user = User::findOrFail($id);
+    foreach($user->roles as $role){
+        $role->whereId(3)->update([
+            "name"=>"viewer"
+        ]);
+    }
+});
+
+// read
+Route::get("user/{id}/role/read",function($id){
+    $user = User::findOrFail($id);
+    if($user->has("roles")){
+        foreach($user->roles as $role){
+            echo $role."<br/>";
+            echo "<br/>";
+            echo $role->name."<br/>";
+            echo "<br/>";
+        }
+    }
+});
+
+// Delete
+Route::get("user/{id}/role/delete",function ($id){
+    $user = User::findOrFail($id);
+//    foreach($user->roles as $role){
+//        $role->whereId(4)->delete();
+//    }
+
+    $user->roles()->delete();
+
+    return "data Delete";
+});
+
+// attach
+Route::get("user/{id}/role/attach",function($id){
+    $user = User::findOrFail($id);
+    $user->roles()->attach(4);
+    return "hello";
+});
+
+
+// Detach
+Route::get("user/{id}/role/detach",function($id){
+    $user = User::findOrFail($id);
+
+    $user->roles()->detach(4);
+
+    return "Detached";
+});
+
+// Sync
+Route::get("user/{id}/role/sync",function($id){
+    $user = User::findOrFail($id);
+
+//    Note :: check Role table & UserRole table (no-action/action)
+
+//    Note :: want to keep only role id 2 for refer user id
+//    $user->roles()->sync(2);
+
+//    Meaning :: want to keep only role id 2,4 for refer user id
+    $user->roles()->sync([2,4]);
+
+//    Meaning :: want to keep existing role id 2,4 and add more role id 1,5 for refer user id
+    $user->roles()->sync([1,2,4,5]);
+
+    return "Sync";
+});
+
+
+---------------------------------------------------------
+Eloquent Polymorphic Relationship              morphMany() / morphTo()
+
+=In Model ( Photo.php)
+
+
+    protected $table = "photos";
+    protected $primaryKey = "id";
+    protected $fillable = [
+        'path',
+        'imageable_id',
+        'imageable_type'
+    ];
+
+    public function imageable(){
+        //morphTo();
+        return $this->morphTo();
+    }
+
+    public function photoable(){
+        //morphTo(name);
+        return $this->morphTo("imageable"); // Note:: if you use imageable_id ,imageable_type !! set here iamgeable
+    }
+
+
+=In Model ( Article.php )
+
+public function photos(){
+    // morphMany(relatedtable,name);
+    return $this->morphMany(Photo::class,"imageable");
+}
+
+
+=In web
+// => Eloquent Polymorphic Relationship
+// Photo Insert
+Route::get("user/{id}/photo/insert",function($id){
+    $user = User::findOrFail($id);
+
+    $photo = new Photo([
+        'path'=>"public\assets\photo\user7.jpg"
+    ]);
+    $user->photos()->save($photo);
+
+    return "Data Insert";
+});
+
+// Article
+// Insert
+Route::get("article/{id}/photo/insert",function($id){
+    $article = Article::findOrFail($id);
+
+    $article->photos()->create([
+        'path'=>"public\assets\photo\articlepic5.jpg"
+    ]);
+
+    return "hello";
+});
+
+
+// Read
+Route::get("user/{id}/photo/read",function($id){
+    $user = User::findOrFail($id);
+    foreach($user->photos as $photo){
+        echo $photo->path ."<br/>";
+    }
+});
+
+Route::get("article/{id}/photo/read",function($id){
+    $article = Article::findOrFail($id);
+    foreach ($article->photos as $photo){
+        echo $photo->path ."<br/>";
+    }
+});
+
+// Update
+Route::get("user/{id}/photo/update",function($id){
+    $user = User::findOrFail($id);
+
+    $photo =  $user->photos()->whereId(15)->first();
+    $photo->path = "public\assets\photo\userUpdate1.jpg";
+    $photo->save();
+
+    return $photo;
+});
+
+    // Imageable type update
+Route::get("users/{id}/photo/imageabletype",function($id){
+    $user = User::findOrFail($id);
+    $photo = Photo::findOrFail(16);
+
+    $user->photos()->save($photo);
+
+});
+
+
+// Delete
+Route::get("user/{id}/photo/delete",function($id){
+    $user = User::findOrFail($id);
+
+//    Single Delete
+//    $user->photos()->whereId(16)->delete();
+
+//    Bulk Delete
+    $user->photos()->delete();
+
+    return "deleted";
+});
+
+------------------------------------------------------
+// => Eloquent Polymorphic Many To Many Relationship       morphToMany(relatedtable,name);
+
+=In Modle (item.php)
+
+    protected $table = "items";
+    protected $primaryKey = "id";
+
+    protected $fillable = [
+        "name"
+    ];
+
+    public function tags(){
+        return $this->morphToMany(Tag::class,"taggable");
+    }
+
+---------------------------------------------------------
+=In Model ( Tag.php )
+    public function articles(){
+        return $this->morphedByMany(Article::class,"taggable");
+    }
+
+    public function items(){
+        return $this->morphedByMany(Item::class,"taggable");
+    }
+
+-----------------------------------------------------------
+=In Model ( Article.php )
+    public function tags(){
+        return $this->morphToMany(Tag::class,"taggable");
+    }
+
+-----------------------------------------------------------
+=In Web
+
+

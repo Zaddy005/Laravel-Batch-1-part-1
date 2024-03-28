@@ -1,0 +1,38 @@
+=> Public Data Passing
+
+app > Providers >AppServiceProvider
+
+// In AppServiceProvider
+
+composer(file,callback)
+* = mean all file
+
+
+    public function boot(): void
+    {
+        view()->composer("*",function($view){
+            $getyear = date("Y");
+            $view->with("getyear",$getyear);
+        });
+    }
+
+-------------------------------------------------    
+// = For Single file
+
+View::composer("employees.index",function($view){
+            $thanks = "Thanks for using Laravel Framework";
+            $view->with("thanks",$thanks);
+        });
+        
+-------------------------------------------------    
+// = For Multi file
+
+View::composer(["employees.index","employees.update"],function($view){
+            $thanks = "Thanks for using Laravel Framework";
+            $view->with("thanks",$thanks);
+        });
+        
+
+
+-------------------------------------------------    
+

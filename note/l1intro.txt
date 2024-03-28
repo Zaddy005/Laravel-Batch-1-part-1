@@ -1,0 +1,78 @@
+=> MVC Framework (Modal,View,Controller)
+
+=Model
+it's work with database (Select,Insert,Update,Delete)
+communicate with the controller (when controller request or a data to modal ! modal supplies that )
+
+=View
+A view is that part of the application that resperents of data HTML CSS codes for
+
+=Controller
+the controller receives input from the user , process the request (GET,POST,PUT,DELETE)
+
+
+-------------------------------------------
+Version Needed
+
+php 8.1^
+composer 2.4^
+
+php -v
+php --Version
+
+composer
+
+
+------------------------------------------------
+
+=>Installation
+Method1
+composer create-project laravel/laravel projectname
+Method 2
+composer global require laravel/installer
+laravel new example-app
+
+------------------------------------------------
+
+=> Folder and File Structure
+
+app > Http > controller
+app > Models
+database > migrtations
+> public ( for public custom css / custom js )
+resources > views
+routes > web.php (or) routes > api.php
+.env ( to connect database and api )
+
+
+------------------------------------------------
+
+=> Run Project
+php artisan serve
+
+=>Stop Project
+php artisan down
+
+=>Resume Project
+php artisan up
+
+=>Stop Project (by redirect)
+php artisan down --redirect=/https://google.com
+
+php 8^
+com 2.5.5
+x on
+down
+
+------------------------------------------------
+
+
+20IN
+
+
+
+
+
+
+
+

@@ -1,0 +1,339 @@
+=>Migration
+
+.env
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=exerciseone
+DB_USERNAME=root
+DB_PASSWORD=
+
+database > migration
+
+
+mysql -u root -p
+password
+
+
+status
+
+CREATE DATABASE exerciseone;
+SHOW DATABASES;
+
+
+database > migrations
+
+=>table to update db to serve
+php artisan migrate
+
+=>Create New Table
+php artisan make:migration create_students_table
+php artisan make:migration create_workers_table --create="workers"
+
+php artisan make:migration create_staffs_table --create="staffs"
+php artisan make:migration create_employees_table --create="employees"
+
+=>Undo migration by step (selected table count to local)
+php artisan migrate:rollback --step=2
+
+=>Check before rollback table list
+php artisan migrate:rollback --pretend
+
+
+
+ Schema::create('students', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('phonenumber');
+            $table->timestamps();
+        });
+
+php artisan migrate
+
+
+1:20:00 7.17 June
+=>Avaliable Column Types
+
+$table->id();
+$table->bigIncrements('id');    XXXXXXXX using for 8 time number
+$table->increments('id');   
+$table->bigInteger('id');       // increments ka < bigIncrements
+$table->unsignedInteger('id');  //  - value htae lo ma ya pr bu
+$table->unsignedBigInteger('id');  //  - value htae lo ma ya pr bu
+$table->smallInteger('votes');  //  myanmar idols lo vote ty ny yr ty mr 3 tr pr
+$table->tinyInteger("status");
+$table->binary('photo');        //  0101 ty pr
+$table->boolean('confirmed');   //  true false // 1 0
+
+$table->char('name',30);
+$table->string('name',100);
+$table->text('description');
+$table->tinytext('notes');
+$table->mediumtext('description');
+$table->longText('post');       // article ty yae yin 3 tr pr
+
+$table->time('booking-time');
+$table->date('created_at');
+$table->year('birth-year');
+$table->timestamps();       // system auto set created_at,updated_at
+$table->timestamp();        // custom py tr pr but value ko database ka tot ma htae py pr bu back end ka ny htae ya mr pr
+
+$table->decimal('amount',precision=8);
+$table->float('measure',precision=8,scale=2);
+$table->enum('payment',['visa','mpu','cod','kpay','wave']);
+$table->json('multiphones');
+
+
+=>List all files from database > migration files
+php artisan migrate:status
+php
+php artisan make:migration create_staffs_table --create="staffs"
+php artisan make:migration create_employees_table --create="employees"
+
+=>Undo migration by step (selected table count to local)
+php artisan migrate:rollback --step=2
+
+=>Check before rollback table list
+php artisan migrate:rollback --pretend
+
+=>Undo migration
+php artisan migrate:rollback
+
+=>Delete all table
+php artisan migrate:reset
+
+php artisan make:migration create_shoppers_table --create="shoppers"
+
+
+=>Delete all data (auto rollback and auto migrate back )
+php artisan migrate:refresh
+
+=>Delete all data (auto rollback and auto migrate back /selected table count ot local DESC )
+php artisan migrate:refresh --step=2
+
+=>Add New Columns
+php artisan make:migration add_city_to_shoppers_table --table=shoppers
+$table->string('city'); to add_city_to_shoppers_table
+php artisan migrate
+
+=>sort column
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+$table->string('city')->after('phonenumber'); to add_city_to_shoppers_table
+
+
+php artisan make:migration add_city_to_employees_table --table=employees
+
+$table->string('city')->after('phonenumber');
+
+php artisan make:migration add_city_to_staffs_table --table=staffs
+=>up
+$table->string('city')->after('phonenumber');
+=>down
+$table->dropColumn('city');
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+php artisan migrate:migrate
+
+=> Drop Columns
+php artisan make:migration remove_id_to_students_table --table=students
+=>up
+$table->dropColumn('id');
+=>down
+$table->string('id');
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+php artisan migrate:migrate
+
+
+php artisan make:migration remove_id_to_workers_table --table=workers
+=>up
+$table->dropColumn(['id','phonenumber']);
+=>down
+$table->string('id');
+$table->string('phonenumber')->string('fullname');
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+php artisan migrate:migrate
+
+
+php artisan make:migration remove_id_to_staffs_table --table=staffs
+=>up
+!!Note:: hasColumn('table','columnname');
+if(Schema::hasColumn('staffs','id)){
+    Schema::table('staffs', function (Blueprint $table) {
+        $table->dropColumn('id');
+    });
+}
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+php artisan migrate:migrate
+
+=>down
+->first(); // a kone lone lone yae a shae mr htae mr pr
+$table->string('id')->first();
+php artisan migrate
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+
+
+=>Rename Columns
+//  composer require doctrine/dbal ( run that code in terminal 
+    can't rename without doctrine/dbal cause MariaDB error
+ )
+
+Note renameColumn(from,to);
+php artisan make:migration rename_students_column --table=students
+=>up
+$table->renameColumn('phonenumber','phone');
+$table->renameColumn('address','city');
+=>down
+$table->renameColumn('phone','phonenumber');
+$table->renameColumn('city','address');
+
+
+
+=>Rename Table rename(from,to)    
+php artisan make:migration rename_employees_to_customers_table --table=employees
+
+=>up
+Schema::rename("employees","customers");
+=>Down
+Schema::rename("customers","employees");
+
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback --pretend
+php artisan migrate:rollback
+php artisan migrate
+------------------
+--------
+10.2 July
+--------
+=>Default Value
+php artisan make:migration create_books_table --table="books"
+
+Schema::create('books', function (Blueprint $table) {
+            $table->increments("id");
+            $table->string("title");
+            $table->tinyInteger("status")->default("1");
+            $table->enum("copyright",["0","1"])->default("0");
+            $table->timestamp("created_at")->default(DB::raw("CURRENT_TIMESTAMP"));
+            $table->timestamp("updated_at")->default(DB::raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
+        });
+
+php artisan make:migration create_profile_table --table="profile"
+------------------
+=>Creating Indexes
+
+$table->string('email')->unique();
+
+php artisan make:migration create_authors_table --create="authors"
+php artisan make:migration create_types_table --create="types"
+php artisan make:migration create_posts_table --create="posts"
+
+=>Foreign Key Constraints
+Method 1
+$table->unsignedBigInteger('user_id');
+$table->foregin('user_id')->references("id")->on('users');
+
+Method 2
+$table->foreignId("user_id")->constrained("users");
+
+Schema::create('types', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->timestamps();
+});
+
+Schema::create('authors', function (Blueprint $table) {
+    $table->id();
+    $table->string("name");
+    $table->timestamps();
+});
+
+
+Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique();
+            $table->text("description");
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign("user_id")->references("id")->on("users")->onUpdate('cascade')->onDelete("cascade");
+
+            $table->foreignId("author_id")->constrained("authors")->onUpdate("cascade")->onDelete("cascade");
+
+            $table->year("year");
+
+            $table->unsignedBigInteger("type_id");
+            $table->foreign("type_id")->references("id")->on("types")->onUpdate("cascade")->onDelete("cascade");
+
+
+            $table->timestamps();
+});
+
+------------------
+=> Data Insert From Route
+
+Route::get("types",function(){
+    return "abc";
+});
+------------------
+11.16 July
+=>CRUD
+DB::select()
+DB::insert()
+DB::update()
+DB::delete()
+
+DB::table()->get()
+
+=>select(columns)
+=>selectRaw(expression)
+=>get()
+
+$result = DB::table()->select()->get();
+$result = DB::table()->selectRaw()->get();
+
+$result = DB::table("students")->select(DB::raw("*"))->get();
+$result = DB::table("students")->selectRaw(DB::raw("*"))->get();
+
+=>where()
+$result = DB::table("students")->select("fullname","city")->where("city","yangon")->get();
+$result = DB::table("students")->select("fullname","city")->where("city","!=","yangon")->get();
+
+$result = DB::table("students")->select(DB::raw("fullname,city"))->get();
+$result = DB::table("students")->select(DB::raw("fullname,city"))->where("id",3)->get();
+
+$result = DB::table('students')->selectRaw("fullname,city")->get();
+
+// => groupBy(column)
+$result = DB::table("students")->select(DB::raw("COUNT(*) as totalstudents,city"))->groupBy("city")->get();
+
+// => first()
+$result = DB::table("students")->first();
+
+//=> pluck(value,key)
+$result = DB::table("students")->pluck("fullname","id");
+
+
+------------------
+database mr migration table ka kyan tae table 4 ku yae record ty ko yu ny tr pr
+
+
+---------------------------------------------
+
+---------------------------------------------
+
+
+17DT
+18PT
