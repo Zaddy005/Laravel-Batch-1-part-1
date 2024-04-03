@@ -13,6 +13,7 @@
 {{--        {{ csrf_field() }}--}}
 {{--        <input type="hidden" name="_token" value="{{ csrf_token() }}" />--}}
         @csrf
+        @method("POST")
 
         <div class="row" >
             <div class="col-md-6 form-group mb-3">

@@ -1224,4 +1224,10 @@ Route::get("item/{id}/tag/delete",function($id){
 
 // 26.23 Sep
 // From CRUD
-Route::resource('countries',countriesController::class);
+
+Route::resource("countries",countriesController::class);
+
+//Route::resource('countries',countriesController::class)->except("destroy");
+//Route::get("countries/delete/{id}",[countriesController::class,'destroy'])->name("countries.delete");
+        // for index page
+//<a href="{{ route("countries.delete",$country->id) }}" class="text-danger" > <i class="fas fa-trash" ></i></a>

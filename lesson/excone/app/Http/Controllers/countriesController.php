@@ -61,7 +61,8 @@ class countriesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $country = Country::findOrFail($id);
+        return view("countries/show",['country'=>$country]);
     }
 
     /**
@@ -69,7 +70,8 @@ class countriesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $country = Country::findOrFail($id);
+        return view("countries/edit")->with("country",$country);
     }
 
     /**
@@ -77,7 +79,14 @@ class countriesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Country::findOrFail($id)->update([
+            'name'=>$request['name'],
+            'capital'=>$request['capital'],
+            'currency'=>$request['currency'],
+            'content'=>$request['content'],
+            'user_id'=>$request['user_id']
+        ]);
+        return redirect(route('countries.index'));
     }
 
     /**
@@ -85,6 +94,10 @@ class countriesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $country = Country::findOrFail($id);
+        $country->delete();
+//        return redirect(route("countries.index"));
+
+        return redirect()->back();
     }
 }
