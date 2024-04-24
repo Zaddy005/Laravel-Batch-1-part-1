@@ -1,20 +1,25 @@
 <?php
 
-use App\Http\Controllers\countriesController;
-use App\Http\Controllers\employeesController;
-use App\Http\Controllers\staffsController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\studentsController;
-use App\Http\Controllers\dashboardsController;
-use App\Http\Controllers\membersController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+
+
 use Carbon\Carbon;
+
+
+use App\Http\Controllers\countriesController;
+use App\Http\Controllers\dashboardsController;
+use App\Http\Controllers\employeesController;
+use App\Http\Controllers\membersController;
+use \App\Http\Controllers\productController;
+use App\Http\Controllers\studentsController;
+use App\Http\Controllers\staffsController;
+
 
 use App\Models\Article;
 use App\Models\Gender;
 use App\Models\Item;
 use App\Models\Tag;
-
 use App\Models\Role;
 use App\Models\Photo;
 use App\Models\Phone;
@@ -1231,3 +1236,89 @@ Route::resource("countries",countriesController::class);
 //Route::get("countries/delete/{id}",[countriesController::class,'destroy'])->name("countries.delete");
         // for index page
 //<a href="{{ route("countries.delete",$country->id) }}" class="text-danger" > <i class="fas fa-trash" ></i></a>
+
+// 28.7 Oct
+Route::get("/dates",function (){
+
+    $date = new DateTime();
+    echo $date->format('d m Y');  // 03 04 2024
+    echo "<br/>";
+
+    echo $date->format('Y m d');  // 2024 04 03
+    echo "<br/>";
+
+    echo $date->format('m d Y');  // 04 03 2024
+    echo "<br/>";
+
+    echo $date->format('d/m/Y');  // 03/04/2024
+    echo "<br/>";
+
+
+    echo $date->format('d-m-Y');  // 03-04-2024
+
+    echo "<hr/>";
+
+    $date = new DateTime("+5day");
+    echo $date->format('d-m-Y');
+    echo "<br/>";
+
+    $date = new DateTime("+ 1 week");
+    echo $date->format('d-m-Y');
+    echo "<br/>";
+
+    echo Carbon::now();  // 2024-04-03 22:10:02
+    echo "<br/>";
+
+    echo Carbon::now()->addDays(10); // 2024-04-13 22:10:37
+    echo "<br/>";
+
+    echo Carbon::now()->addDays(3)->diffForHumans(); // 2 days from now
+    echo "<br/>";
+
+    echo Carbon::now()->addDays(10)->diffForHumans(); // 1 week from now
+    echo "<br/>";
+
+    echo Carbon::now()->subDay(1); // 2024-04-02 22:15:24
+    echo "<br/>";
+
+    echo Carbon::now()->subDay(3)->diffForHumans(); // 3 days ago
+    echo "<br/>";
+
+    echo Carbon::now()->subDay(10)->diffForHumans(); // 1 week ago
+    echo "<br/>";
+
+    echo Carbon::now()->addMonths(1); // 2024-05-03 22:17:51
+    echo "<br/>";
+
+    echo Carbon::now()->addMonths(1)->diffForHumans(); // 4 weeks from now
+    echo "<br/>";
+
+    echo Carbon::now()->addMonths(3)->diffForHumans(); // 2 months from now
+    echo "<br/>";
+
+    echo Carbon::now()->addMonths(10)->diffForHumans(); // 9 months from now
+    echo "<br/>";
+
+    echo Carbon::now()->subMonths(1); // 2024-03-03 22:20:50
+    echo "<br/>";
+
+    echo Carbon::now()->subMonths(1)->diffForHumans(); // 1 month ago
+    echo "<br/>";
+
+    echo Carbon::now()->subMonths(3)->diffForHumans(); // 3 months ago
+    echo "<br/>";
+
+    echo Carbon::now()->subMonths(10)->diffForHumans(); // 10 months ago
+    echo "<br/>";
+
+    echo Carbon::now()->yesterday()->diffForHumans(); // 1 day ago
+    echo "<br/>";
+
+    echo Carbon::now()->tomorrow()->diffForHumans();
+    echo "<br/>";
+
+});
+
+// Image Upload
+// Single Upload
+Route::resource("products",productController::class);
