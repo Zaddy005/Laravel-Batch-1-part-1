@@ -1,0 +1,49 @@
+=> Image Upload
+
+=Single Upload
+=Migration
+
+php artisan make:model Product -m
+
+    $table->string("name");
+    $table->decimal('price',9,2);
+    $table->string('image');
+
+php artisan migrate:status
+php artisan migrate
+
+= In Model ( Products.php )
+
+    protected $table = "products";
+    protected $primaryKey = "id";
+    protected $fillable = [
+        'name',
+        'price',
+        'image'
+    ];
+
+=In CMD
+
+php artisan make:controller productsController --resource
+        ( or )
+php artisan make:controller productsController -r
+
+
+29.8 Oct
+=In productController ( controller )
+
+        // => 1. Public Folder ( public/customFolder )
+
+            //$request->image->move('path',$imagename);
+            //$request->image->move(public_path('path'),$imagename);
+
+        // => 2. Storage Folder ( storage/app/customFolder )
+
+            $request->image->store('path');
+
+                //use Illuminate\Support\Facades\Storage;
+                //Storage::disk("local").put($file,'content','optional');
+
+                //$request->image->storeAs($file,$imagename,optional driver);
+
+        // => 3. Local Driver ( storage/app/customFolder )

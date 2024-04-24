@@ -1,13 +1,15 @@
+26.23 Sep
 => Form CRUD
-= Migration
 
 php artisan make:model Country -m
+
+=In Migration
 
             $table->id();
             $table->string("name");
             $table->string("capital");
             $table->string("currency");
-            $table->string("content");
+            $table->text("content");
             $table->integer("user_id")->unsigned();
             $table->timestamps();
 
@@ -90,3 +92,92 @@ public function store(Request $request)
 
 check resource/view/create.blade.php    Insert User data form
                    /index.blade.php     User List
+
+
+27.24 Sep
+=In Controller ( countriesController.php )
+
+    public function show(string $id)
+        {
+            $country = Country::findOrFail($id);
+            return view("countries/show",['country'=>$country]);
+        }
+
+        public function edit(string $id)
+        {
+            $country = Country::findOrFail($id);
+            return view("countries/edit")->with('country',$country);
+        }
+
+        public function update(Request $request, string $id)
+        {
+            $country = Country::findOrFail($id);
+            $country->name = $request['name'];
+            $country->capital = $request['capital'];
+            $country->currency = $request["currency"];
+            $country->content = $request['content'];
+            $country->user_id = $request["user_id"];
+            $country->save();
+
+            return redirect(route('countries.index'));
+        }
+
+        public function destroy(string $id)
+        {
+            $country = Country::findOrFail($id);
+            $country->delete();
+            // return redirect(route("countries.index"));
+            return redirect()->back();
+        }
+
+28.7 Oct
+
+7:50 -> 12:50 | about <form action=""> action and url method
+
+url('url link','parameter');
+
+19:00  ->  22:00 ( data delete from jQuery with class )
+23:00  ->  34:00 ( data delete from jQuery with Id )
+
+=In resources > views > countries > index.blade.php
+
+    <td>
+
+         <a href="" class="text-info mx-1" ><i class="fas fa-pen" ></i></a>
+
+         {{-- {{ route("countries.edit",$country->id) }}    --}}
+
+         {{-- {{ route("countries.destroy",$country->id) }}           --}}
+         {{-- {{ route("countries.destroy",$country['id']) }}         --}}
+         {{-- /countries/{{$country->id}}                             --}}
+         {{-- /countries/{{$country['id']}}                           --}}
+         {{-- {{ url('/countries',$country->id) }}                    --}}
+         {{-- {{ url('/countries',$country['id']) }}                  --}}
+
+         {{-- <a href="{{ route("countries.delete",$country->id) }}" class="text-danger mx-1" ><i class="fas fa-trash" ></i></a> --}}
+         <form class="formdelete" action="{{ route('countries.destroy',$country->id) }}" method="POST" >
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm text-danger" > <i class="fas fa-trash" ></i> </button>
+         </form>
+
+    </td>
+
+    <script type="text/javascript" >
+
+                $(document).ready(function(){
+                    $('.formdelete').on("submit",function(){
+                        if(confirm('Are you sure want to delete')){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    });
+
+                });
+
+    </script>
+
+
+36:00
+=> go to l13dateformats.txt

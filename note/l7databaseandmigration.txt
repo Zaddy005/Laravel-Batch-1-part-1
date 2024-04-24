@@ -63,6 +63,7 @@ $table->unsignedInteger('id');  //  - value htae lo ma ya pr bu
 $table->unsignedBigInteger('id');  //  - value htae lo ma ya pr bu
 $table->smallInteger('votes');  //  myanmar idols lo vote ty ny yr ty mr 3 tr pr
 $table->tinyInteger("status");
+
 $table->binary('photo');        //  0101 ty pr
 $table->boolean('confirmed');   //  true false // 1 0
 
@@ -81,13 +82,13 @@ $table->timestamp();        // custom py tr pr but value ko database ka tot ma h
 
 $table->decimal('amount',precision=8);
 $table->float('measure',precision=8,scale=2);
+
 $table->enum('payment',['visa','mpu','cod','kpay','wave']);
 $table->json('multiphones');
 
 
 =>List all files from database > migration files
 php artisan migrate:status
-php
 php artisan make:migration create_staffs_table --create="staffs"
 php artisan make:migration create_employees_table --create="employees"
 
@@ -172,6 +173,7 @@ if(Schema::hasColumn('staffs','id)){
         $table->dropColumn('id');
     });
 }
+
 php artisan migrate
 php artisan migrate:status
 php artisan migrate:rollback --pretend
@@ -244,7 +246,7 @@ php artisan make:migration create_posts_table --create="posts"
 =>Foreign Key Constraints
 Method 1
 $table->unsignedBigInteger('user_id');
-$table->foregin('user_id')->references("id")->on('users');
+$table->foreign('user_id')->references("id")->on('users');
 
 Method 2
 $table->foreignId("user_id")->constrained("users");
@@ -261,7 +263,6 @@ Schema::create('authors', function (Blueprint $table) {
     $table->timestamps();
 });
 
-
 Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title')->unique();
@@ -276,7 +277,6 @@ Schema::create('posts', function (Blueprint $table) {
 
             $table->unsignedBigInteger("type_id");
             $table->foreign("type_id")->references("id")->on("types")->onUpdate("cascade")->onDelete("cascade");
-
 
             $table->timestamps();
 });
@@ -295,7 +295,7 @@ DB::insert()
 DB::update()
 DB::delete()
 
-DB::table()->get()
+DB::table("table-name")->get()
 
 =>select(columns)
 =>selectRaw(expression)
