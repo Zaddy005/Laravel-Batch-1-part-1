@@ -29,7 +29,7 @@ class productController extends Controller
         //$request->image->move(public_path('path'),$imagename);
 
         // => 2. Storage Folder ( storage/app/customFolder )
-
+        // php artisan storage:link  ( if u don't run this code in terminal storage folder cah't access from method eg asset,... )
         //$request->image->store('path');
 
         //use Illuminate\Support\Facades\Storage;
@@ -47,27 +47,27 @@ class productController extends Controller
         $file = $request->file('image');
 
         //1.Public Folder
-        //if($file){
-            //$fname = $file->getClientOriginalName();
-            //$imagenewname = date("ymdHis").$fname; // 240421222450itachi2.jpg
-            //$imagenewname = time().$fname; // 1713738319itachi2.jpg
-            //$imagenewname = uniqid().$fname; // 662592a92fc1fitachi2.jpg
+//        if($file){
+//            $fname = $file->getClientOriginalName();
+//            $imagenewname = date("ymdHis").$fname; // 240421222450itachi2.jpg
+//            $imagenewname = time().$fname; // 1713738319itachi2.jpg
+//            $imagenewname = uniqid().$fname; // 662592a92fc1fitachi2.jpg
+//
+//            // image move into public > images folder
+//            $file->move('images',$imagenewname);
+//            $product->image = $imagenewname;
+//        }
 
-            //// image move into public > images folder
-            //$file->move('images',$imagenewname);
-            //$product->image = $imagenewname;
-        //}
-
-        //if($file){
-            //$fname = $file->getClientOriginalName();
-            //$imagenewname = time().$fname;
-
-            //$fileurl = $file->move("images",$imagenewname); // 662594a00ff245d434299f8c68acf90aafd1a01184d3d.jpg
-
-            //$fileurl = $file->move(public_path("images"),$imagenewname); // E:\anp\......\practice\Laravelb1\lesson\excone\public\images\1713742587plane.jpg
-
-            //$product->image = $fileurl;
-       //}
+//        if($file){
+//            $fname = $file->getClientOriginalName();
+//            $imagenewname = time().$fname;
+//
+////            $fileurl = $file->move("images",$imagenewname); // 662594a00ff245d434299f8c68acf90aafd1a01184d3d.jpg
+//
+//            $fileurl = $file->move(public_path("images"),$imagenewname); // E:\anp\......\practice\Laravelb1\lesson\excone\public\images\1713742587plane.jpg
+//
+//            $product->image = $fileurl;
+//       }
 
       //2. Storage > app > images Folder
 //        if($request->hasFile('image')){
@@ -75,17 +75,17 @@ class productController extends Controller
 //            $imagenewname = time().".".$fnameext;
 //
 //            // images is under ( storage/app/images ) if images folder doesn't exist it will create by automatically
-//            //$file->storeAs("images",$imagenewname);
+//            $file->storeAs("images",$imagenewname);
 //
 //            // images is under ( storage/app/public/images ) if images folder doesn't exist it will create by automatically
-//            $file->storeAs("public/images",$imagenewname);
+////            $file->storeAs("public/images",$imagenewname);
 //
 //            $product->image = $imagenewname;
 //        }
 
 //        if($request->hasFile('image')){
 //            // create uniqid and move file by automatically
-//            $fileurl = $file->store(); // storage/app/NIWouuAfkBPSvK0ETpQAxDGIuMUirAew6qo9srFm.jpg
+////            $fileurl = $file->store(); // storage/app/NIWouuAfkBPSvK0ETpQAxDGIuMUirAew6qo9srFm.jpg
 //
 //            // it u give parameter as folder name it will store under the folder that u give as a parameter
 //            $fileurl = $file->store("images"); // storage/app/images/NIWouuAfkBPSvK0ETpQAxDGIuMUirAew6qo9srFm.jpg

@@ -29,7 +29,20 @@
                     <tr>
                         <td> {{ ++$idx }} </td>
                         <td>
-                            <img src="{{ asset('images',$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            {{--  asset,url for public > images folder --}}
+                            <img src="{{ asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ asset('images/'.$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+
+                            <img src="{{ url($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ url("images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+
+                            <img src="{{ URL::asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ URL::asset("images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+
+                            {{-- storage > images --}}
+                            <img src="{{ asset("storage/images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+
                         </td>
                         <td> {{ $product->name }} </td>
                         <td> {{ $product->price }} </td>
@@ -37,7 +50,6 @@
                         <td> {{ $product->updated_at }} </td>
                         <td class="d-flex align-items-center" >
                             <a href="{{ route('products.edit',$product->id) }}" class="text-primary me-3" > <i class="fas fa-pen" ></i></a>
-
 
                             <form class="formdelete" action="{{ route("products.destroy",$product->id) }}" method="POST" >
                                 @csrf
