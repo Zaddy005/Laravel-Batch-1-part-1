@@ -39,7 +39,9 @@ php artisan make:controller productsController -r
 
     // => 2. Storage Folder ( storage/app/customFolder )
 
-    // need to run this cmd in terminal for ( store() , storeAs() , Storage Object )
+    // need to run this cmd in terminal for ( sto
+
+    re() , storeAs() , Storage Object )
     // php artisan storage:link
 
     //$request->image->store('path');
