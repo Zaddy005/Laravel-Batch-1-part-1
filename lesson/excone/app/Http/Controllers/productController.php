@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Models\Product;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 
 class productController extends Controller
 {
@@ -126,12 +127,64 @@ class productController extends Controller
 
     public function update(Request $request, string $id)
     {
-        Product::findOrFail($id)->update([
-            'name'=>$request['name'],
-            'price'=>$request['price'],
-            'image'=>$request['image']
-        ]);
-        redirect(route('products.index'));
+        $product = Product::findOrFail($id);
+        $product->name = $request['name'];
+        $product->price = $request['price'];
+
+        // delete old file and update new file ( For public )
+//        if($request){
+//            $path = public_path('images/').$product->image;
+//
+//            if(File::exists($path)){
+//                File::delete($path);
+//            }
+//        }
+
+        // delete old file and update new file ( For Storage )
+        if($request){
+            $path = storage_path("app/public/images/").$product->image;
+            if(File::exists($path)){
+                File::delete($path);
+            }
+        }
+
+//        if($request->hasFile('image')){
+//            $file = $request->file('image');
+//            $fileext = $file->getClientOriginalExtension();
+//            $imagenewname = uniqid().".".$fileext;
+//
+//            // move img public > images
+//            $file->move("images",$imagenewname);
+//
+//            $product->image = $imagenewname;
+//        }
+
+//        if($request->hasFile('image')){
+//            $file = $request->file("image");
+//            $fileext = $file->getClientOriginalExtension();
+//            $imagenewname = time().".".$fileext;
+//
+//            $file->storeAs("public/images",$imagenewname);
+//            $product->image = $imagenewname;
+//        }
+
+//        if($request->hasFile('image')){
+//            $file = $request->file("image");
+//            $fileurl = $file->store("public/images");
+//            $product->image = trim($fileurl,'public');
+//        }
+
+        if($request->hasFile("image")){
+            $file = $request->file("image");
+            $fileext = $file->getClientOriginalExtension();
+            $imagenewname = time().".".$fileext;
+
+            Storage::disk("local")->put('public/images/'.$imagenewname,File::get($file),"public");
+            $product->image = $imagenewname;
+        }
+
+        $product->save();
+        return redirect(route('products.index'));
     }
 
     public function destroy(string $id)

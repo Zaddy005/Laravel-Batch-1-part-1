@@ -2,6 +2,18 @@
 
 @section('title'," Product Page ")
 
+@section('style')
+
+    <style type="text/css" >
+        img{
+            width: 50px;
+            object-fit: cover;
+
+        }
+    </style>
+
+@endsection
+
 @section('content')
 
     <h1> Index Page </h1>
@@ -21,7 +33,6 @@
                     <th>Created At</th>
                     <th>Updated At</th>
                     <th>Action</th>
-                    <th>Drop</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,18 +41,18 @@
                         <td> {{ ++$idx }} </td>
                         <td>
                             {{--  asset,url for public > images folder --}}
-                            <img src="{{ asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
-                            <img src="{{ asset('images/'.$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ asset($product->image) }}" class="rounded-circle"  alt="{{$product->image}}" />
+                            <img src="{{ asset('images/'.$product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
 
-                            <img src="{{ url($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
-                            <img src="{{ url("images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ url($product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
+                            <img src="{{ url("images/".$product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
 
-                            <img src="{{ URL::asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
-                            <img src="{{ URL::asset("images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ URL::asset($product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
+                            <img src="{{ URL::asset("images/".$product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
 
                             {{-- storage > images --}}
-                            <img src="{{ asset("storage/images/".$product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
-                            <img src="{{ asset($product->image) }}" class="rounded-circle" style="width:50px;" alt="{{$product->image}}" />
+                            <img src="{{ asset("storage/".$product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
+                            <img src="{{ asset("storage/images/".$product->image) }}" class="rounded-circle" alt="{{$product->image}}" />
 
                         </td>
                         <td> {{ $product->name }} </td>
@@ -58,16 +69,6 @@
                             </form>
 
                         </td>
-                        <td>
-                            <a href="#" class="text-info me-3" ><i class="fas fa-pen" ></i></a>
-                            <a href="#"  class="btn text-danger" onclick="event.preventDefault(); document.getElementById('formdelete-{{$product->id}}').submit()" ><i class="fas fa-trash" ></i></a>
-                        </td>
-
-                        <form id="formdelete-{{$product->id}}" action="{{route("products.destroy",$product->id)}}" method="POST" >
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-                        </form>
-
                     </tr>
                 @endforeach
             </tbody>
@@ -81,17 +82,6 @@
 @section('script')
 
     <script type="text/javascript" >
-
-        $(document).ready(function(){
-            $('.formdelete').on('submit',function(){
-                if(confirm("Are you sure you want to delete it?")){
-                    return true;
-                }else{
-                    return false;
-                }
-            });
-        });
-
     </script>
 
 @endsection
